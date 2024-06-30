@@ -1,0 +1,41 @@
+# Entorno virtual
+ProtesisHand/Lib/
+ProtesisHand/Scripts/
+ProtesisHand/Include/
+ProtesisHand/pyvenv.cfg
+
+# Archivos de configuración específicos de entorno
+*.env
+*.local
+
+# Archivos de logs
+*.log
+*.log.*
+
+# Archivos de base de datos
+*.sqlite3
+
+# Archivos de compilación
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos de Jupyter Notebook
+.ipynb_checkpoints/
+
+# Directorios de IDEs y editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos específicos de sistema operativo
+.DS_Store
+Thumbs.db
+
+# Otros archivos temporales
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
