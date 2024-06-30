@@ -1,11 +1,11 @@
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import Sequential # type: ignore
-from tensorflow.keras.layers import Input, Conv1D, MaxPooling1D, Flatten, Dense, Dropout, BatchNormalization # type: ignore
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Input, Conv1D, MaxPooling1D, Flatten, Dense, Dropout, BatchNormalization
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import os
-from tensorflow.keras.callbacks import EarlyStopping # type: ignore
+from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.metrics import accuracy_score, classification_report
 
 # Procesamiento de Datos
@@ -94,8 +94,6 @@ predicted_classes = np.argmax(predictions, axis=1)
 print(f'Predicciones: {predicted_classes}')
 print(f'Labels reales: {y_test}')
 
-
-
 # Evaluar la precisión
 accuracy = accuracy_score(y_test, predicted_classes)
 report = classification_report(y_test, predicted_classes)
@@ -106,4 +104,3 @@ print(f'Classification Report:\n{report}')
 # Guardar el modelo entrenado en el formato recomendado por Keras
 model.save('modelo_entrenado.keras')
 print("Modelo guardado como 'modelo_entrenado.keras'")
-
