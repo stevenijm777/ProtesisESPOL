@@ -79,3 +79,34 @@ model.fit(X_train, y_train, epochs=10, batch_size=32, validation_split=0.2)
 # Evaluación del modelo
 loss, accuracy = model.evaluate(X_test, y_test)
 print(f'Loss: {loss}, Accuracy: {accuracy}')
+
+
+# Construcción del modelo con más capas y regularización
+"""
+
+model = Sequential([
+    Input(shape=(1, 1)),
+    Conv1D(filters=64, kernel_size=1, activation='relu'),
+    BatchNormalization(),
+    MaxPooling1D(pool_size=1),
+    Dropout(0.5),
+    Conv1D(filters=128, kernel_size=1, activation='relu'),
+    BatchNormalization(),
+    MaxPooling1D(pool_size=1),
+    Dropout(0.5),
+    Flatten(),
+    Dense(256, activation='relu'),
+    Dropout(0.5),
+    Dense(5, activation='softmax')  # 5 movimientos diferentes
+])
+
+# Compilación del modelo con una tasa de aprendizaje ajustada
+model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+# Entrenamiento del modelo
+history = model.fit(X_train, y_train, epochs=20, batch_size=32, validation_split=0.3)
+
+# Evaluación del modelo
+loss, accuracy = model.evaluate(X_test, y_test)
+print(f'Loss: {loss}, Accuracy: {accuracy}')
+"""
