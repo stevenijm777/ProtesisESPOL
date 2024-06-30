@@ -1,12 +1,16 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Sequential # type: ignore
-from tensorflow.keras.layers import Input, Conv1D, MaxPooling1D, Flatten, Dense, Dropout, BatchNormalization # type: ignore
+from tensorflow.keras.layers import LSTM, Input, Conv1D, MaxPooling1D, Flatten, Dense, Dropout, BatchNormalization # type: ignore
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import os
 from tensorflow.keras.callbacks import EarlyStopping # type: ignore
 from sklearn.metrics import accuracy_score, classification_report
+
+
+
+
 
 # Procesamiento de Datos
 
@@ -61,24 +65,25 @@ X_test = scaler.transform(X_test.reshape(-1, 1)).reshape(-1, 1, 1)
 
 print("Datos procesados y listos para el entrenamiento del modelo.")
 
-# Construcción del modelo
+
+# Construcción del modelo LSTM
 model = Sequential([
-    Input(shape=(1, 1)),
-    Conv1D(filters=32, kernel_size=1, activation='relu'),  # kernel_size ajustado a 1
-    MaxPooling1D(pool_size=1),
-    Flatten(),
-    Dense(100, activation='relu'),
+    LSTM(64, input_shape=(1, 1), return_sequences=True),
+    BatchNormalization(),
+    Dropout(0.5),
+    LSTM(128, return_sequences=False),
+    BatchNormalization(),
+    Dropout(0.5),
+    Dense(256, activation='relu'),
+    Dropout(0.5),
     Dense(5, activation='softmax')  # 5 movimientos diferentes
 ])
 
-# Compilación del modelo con una tasa de aprendizaje ajustada
-model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+# Compilación del modelo
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-# Definir Early Stopping
-early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
-
-# Entrenamiento del modelo con Early Stopping
-history = model.fit(X_train, y_train, epochs=50, batch_size=32, validation_split=0.2, callbacks=[early_stopping])
+# Entrenamiento del modelo
+history = model.fit(X_train, y_train, epochs=20, batch_size=32, validation_split=0.2)
 
 # Evaluación del modelo
 loss, accuracy = model.evaluate(X_test, y_test)
@@ -102,8 +107,3 @@ report = classification_report(y_test, predicted_classes)
 
 print(f'Accuracy: {accuracy}')
 print(f'Classification Report:\n{report}')
-
-# Guardar el modelo entrenado en el formato recomendado por Keras
-model.save('modelo_entrenado.keras')
-print("Modelo guardado como 'modelo_entrenado.keras'")
-
