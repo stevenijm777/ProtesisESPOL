@@ -6,7 +6,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import os
 from tensorflow.keras.callbacks import EarlyStopping
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_curve, auc, precision_recall_curve
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Procesamiento de Datos
 
@@ -104,3 +106,81 @@ print(f'Classification Report:\n{report}')
 # Guardar el modelo entrenado en el formato recomendado por Keras
 model.save('modelo_entrenado.keras')
 print("Modelo guardado como 'modelo_entrenado.keras'")
+
+# Funciones para generar gráficas
+
+# 1. Matriz de Confusión
+def plot_confusion_matrix(y_true, y_pred, classes):
+    cm = confusion_matrix(y_true, y_pred)
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=classes, yticklabels=classes)
+    plt.xlabel('Predicted')
+    plt.ylabel('True')
+    plt.title('Confusion Matrix')
+    plt.show()
+
+# 2. Curva ROC y AUC
+def plot_roc_curve(y_true, y_proba, n_classes):
+    fpr = {}
+    tpr = {}
+    roc_auc = {}
+
+    for i in range(n_classes):
+        fpr[i], tpr[i], _ = roc_curve(y_true == i, y_proba[:, i])
+        roc_auc[i] = auc(fpr[i], tpr[i])
+
+    plt.figure()
+    for i in range(n_classes):
+        plt.plot(fpr[i], tpr[i], lw=2, label=f'Class {i} (area = {roc_auc[i]:.2f})')
+    plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Receiver Operating Characteristic')
+    plt.legend(loc='lower right')
+    plt.show()
+
+# 3. Curva de Precisión-Recall
+def plot_precision_recall_curve(y_true, y_proba, n_classes):
+    plt.figure()
+    for i in range(n_classes):
+        precision, recall, _ = precision_recall_curve(y_true == i, y_proba[:, i])
+        plt.plot(recall, precision, lw=2, label=f'Class {i}')
+    plt.xlabel('Recall')
+    plt.ylabel('Precision')
+    plt.title('Precision-Recall Curve')
+    plt.legend(loc='lower left')
+    plt.show()
+
+# 4. Gráfico de Precisión versus Épocas
+def plot_accuracy(history):
+    plt.figure()
+    plt.plot(history.history['accuracy'], label='Train Accuracy')
+    plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.title('Accuracy vs Epochs')
+    plt.legend()
+    plt.show()
+
+# 5. Gráfico de Pérdida versus Épocas
+def plot_loss(history):
+    plt.figure()
+    plt.plot(history.history['loss'], label='Train Loss')
+    plt.plot(history.history['val_loss'], label='Validation Loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.title('Loss vs Epochs')
+    plt.legend()
+    plt.show()
+
+# Clases de ejemplo
+classes = ['Brazo Arriba', 'Descanso', 'Codo', 'Abre y Cierra', 'Pinza']
+
+# Generar las gráficas
+plot_confusion_matrix(y_test, predicted_classes, classes)
+plot_roc_curve(y_test, predictions, len(classes))
+plot_precision_recall_curve(y_test, predictions, len(classes))
+plot_accuracy(history)
+plot_loss(history)
