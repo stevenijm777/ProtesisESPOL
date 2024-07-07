@@ -10,6 +10,9 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# Cambiar el backend de Matplotlib
+plt.switch_backend('Agg')
+
 # Procesamiento de Datos
 
 # Obtener la ruta absoluta del directorio del script
@@ -117,7 +120,8 @@ def plot_confusion_matrix(y_true, y_pred, classes):
     plt.xlabel('Predicted')
     plt.ylabel('True')
     plt.title('Confusion Matrix')
-    plt.show()
+    plt.savefig('confusion_matrix.png')
+    plt.close()
 
 # 2. Curva ROC y AUC
 def plot_roc_curve(y_true, y_proba, n_classes):
@@ -139,7 +143,8 @@ def plot_roc_curve(y_true, y_proba, n_classes):
     plt.ylabel('True Positive Rate')
     plt.title('Receiver Operating Characteristic')
     plt.legend(loc='lower right')
-    plt.show()
+    plt.savefig('roc_curve.png')
+    plt.close()
 
 # 3. Curva de Precisión-Recall
 def plot_precision_recall_curve(y_true, y_proba, n_classes):
@@ -151,7 +156,8 @@ def plot_precision_recall_curve(y_true, y_proba, n_classes):
     plt.ylabel('Precision')
     plt.title('Precision-Recall Curve')
     plt.legend(loc='lower left')
-    plt.show()
+    plt.savefig('precision_recall_curve.png')
+    plt.close()
 
 # 4. Gráfico de Precisión versus Épocas
 def plot_accuracy(history):
@@ -162,7 +168,8 @@ def plot_accuracy(history):
     plt.ylabel('Accuracy')
     plt.title('Accuracy vs Epochs')
     plt.legend()
-    plt.show()
+    plt.savefig('accuracy_vs_epochs.png')
+    plt.close()
 
 # 5. Gráfico de Pérdida versus Épocas
 def plot_loss(history):
@@ -173,7 +180,8 @@ def plot_loss(history):
     plt.ylabel('Loss')
     plt.title('Loss vs Epochs')
     plt.legend()
-    plt.show()
+    plt.savefig('loss_vs_epochs.png')
+    plt.close()
 
 # Clases de ejemplo
 classes = ['Brazo Arriba', 'Descanso', 'Codo', 'Abre y Cierra', 'Pinza']
@@ -184,3 +192,4 @@ plot_roc_curve(y_test, predictions, len(classes))
 plot_precision_recall_curve(y_test, predictions, len(classes))
 plot_accuracy(history)
 plot_loss(history)
+
