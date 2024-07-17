@@ -3,7 +3,7 @@ import time
 import os
 
 # Configurar la conexión serie
-ser = serial.Serial('COM8', 115200)  # Reemplaza 'COM3' con el puerto serie correcto
+ser = serial.Serial('COM8', 115200)  # Reemplaza 'COM8' con el puerto serie correcto
 
 # Obtener la ruta absoluta del directorio del script
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -26,7 +26,13 @@ if os.path.exists(file_path):
     data = load_data(file_path)
     for dato in data:
         ser.write(f"{dato}\n".encode())
+        print(f"Datos enviados: {dato}")
         time.sleep(0.1)  # Espera 100 ms antes de enviar el siguiente dato
+        
+        # Leer y mostrar la respuesta del ESP32
+        while ser.in_waiting > 0:
+            respuesta = ser.readline().decode().strip()
+            print(f"Respuesta del ESP32: {respuesta}")
 else:
     print(f"Archivo no encontrado: {file_path}")
 

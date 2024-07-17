@@ -8,11 +8,14 @@ except serial.SerialException as e:
     print(f"No se pudo abrir el puerto: {e}")
     exit()
 
+# Lista de clases para enviar
+clases = [1, 2, 3, 4, 5]
+
 # Enviar mensajes cada cierto tiempo
 try:
-    while True:
-        ser.write(b"Hola ESP32\n")
-        print("Mensaje enviado: Hola ESP32")
+    for clase in clases:
+        ser.write(f"{clase}\n".encode())
+        print(f"Clase enviada: {clase}")
         time.sleep(2)  # Espera 2 segundos antes de enviar el siguiente mensaje
 except KeyboardInterrupt:
     print("Interrupción del usuario. Cerrando puerto.")
