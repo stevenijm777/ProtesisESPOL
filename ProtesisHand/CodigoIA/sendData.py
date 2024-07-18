@@ -21,9 +21,11 @@ def load_data(file_path):
         data = [int(line.strip()) for line in file]
     return data
 
-# Leer datos de un archivo y enviarlos
+# Leer todos los datos de un archivo y enviarlos
 if os.path.exists(file_path):
     data = load_data(file_path)
+    predicciones = []
+    
     for dato in data:
         ser.write(f"{dato}\n".encode())
         print(f"Datos enviados: {dato}")
@@ -33,6 +35,15 @@ if os.path.exists(file_path):
         while ser.in_waiting > 0:
             respuesta = ser.readline().decode().strip()
             print(f"Respuesta del ESP32: {respuesta}")
+            
+            if "Clase Predicha:" in respuesta:
+                clase = int(respuesta.split("Clase Predicha:")[1].strip())
+                predicciones.append(clase)
+    
+    # Hacer un resumen de las predicciones
+    from collections import Counter
+    resumen = Counter(predicciones)
+    print(f"Resumen de predicciones para Pinza.txt: {dict(resumen)}")
 else:
     print(f"Archivo no encontrado: {file_path}")
 

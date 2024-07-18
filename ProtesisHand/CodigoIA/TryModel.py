@@ -11,13 +11,15 @@ subfolder = 'HandLeftP2'  # Cambiar aquí para trabajar con otra subcarpeta
 folder_path = os.path.join(script_dir, 'Datos', subfolder)
 
 # Ruta al archivo Pinza.txt
-pinza_file_path = os.path.join(folder_path, 'Pinza.txt')
+file_path = os.path.join(folder_path, 'Pinza.txt')
 
 # Función para cargar los datos desde un archivo de texto
-def load_data_line_by_line(file_path):
+def load_data(file_path, limit=None):
     with open(file_path, 'r') as file:
-        for line in file:
-            yield int(line.strip())
+        data = [int(line.strip()) for line in file]
+    if limit:
+        data = data[:limit]
+    return data
 
 # Cargar el modelo entrenado
 model = load_model('modelo_entrenado.keras')
@@ -27,9 +29,10 @@ scaler_mean = 0.15850927
 scaler_scale = 0.04388263
 
 # Leer el archivo Pinza.txt línea por línea, normalizar, escalar y predecir
-if os.path.exists(pinza_file_path):
+if os.path.exists(file_path):
+    data = load_data(file_path, limit=100)
     predictions = []
-    for dato in load_data_line_by_line(pinza_file_path):
+    for dato in data:
         # Normalizar y escalar los datos
         dato_normalizado = dato / 1023.0
         dato_escalado = (dato_normalizado - scaler_mean) / scaler_scale
@@ -46,4 +49,5 @@ if os.path.exists(pinza_file_path):
     unique, counts = np.unique(predictions, return_counts=True)
     print(f'Resumen de predicciones para Pinza.txt: {dict(zip(unique, counts))}')
 else:
-    print(f"Archivo no encontrado: {pinza_file_path}")
+    print(f"Archivo no encontrado: {file_path}")
+
