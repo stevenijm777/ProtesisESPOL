@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Input, Conv1D, MaxPooling1D, Flatten, Dense, Dropout, BatchNormalization
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -110,86 +110,30 @@ print(f'Classification Report:\n{report}')
 model.save('modelo_entrenado.keras')
 print("Modelo guardado como 'modelo_entrenado.keras'")
 
-# Funciones para generar gráficas
+# Cargar el modelo entrenado
+model = load_model('modelo_entrenado.keras')
 
-# 1. Matriz de Confusión
-def plot_confusion_matrix(y_true, y_pred, classes):
-    cm = confusion_matrix(y_true, y_pred)
-    plt.figure(figsize=(10, 7))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=classes, yticklabels=classes)
-    plt.xlabel('Predicted')
-    plt.ylabel('True')
-    plt.title('Confusion Matrix')
-    plt.savefig('confusion_matrix.png')
-    plt.close()
+# Ruta al archivo Pinza.txt
+pinza_file_path = os.path.join(folder_path, 'Pinza.txt')
 
-# 2. Curva ROC y AUC
-def plot_roc_curve(y_true, y_proba, n_classes):
-    fpr = {}
-    tpr = {}
-    roc_auc = {}
+# Cargar los datos del archivo Pinza.txt
+if os.path.exists(pinza_file_path):
+    pinza_data = load_data(pinza_file_path)
+    # Normalizar y escalar los datos
+    pinza_data = pinza_data / 1023.0
+    pinza_data = pinza_data.reshape(-1, 1, 1)
+    pinza_data = scaler.transform(pinza_data.reshape(-1, 1)).reshape(-1, 1, 1)
+    print("Scaler_mean",scaler.mean_)
+    print("Scaler_scale",scaler.scale_)
 
-    for i in range(n_classes):
-        fpr[i], tpr[i], _ = roc_curve(y_true == i, y_proba[:, i])
-        roc_auc[i] = auc(fpr[i], tpr[i])
+    # Realizar predicciones con los datos de Pinza.txt
+    pinza_predictions = model.predict(pinza_data)
+    pinza_predicted_classes = np.argmax(pinza_predictions, axis=1)
+    
+    print(f'Predicciones para Pinza.txt: {pinza_predicted_classes}')
+    unique, counts = np.unique(pinza_predicted_classes, return_counts=True)
+    print(f'Resumen de predicciones para Pinza.txt: {dict(zip(unique, counts))}')
+else:
+    print(f"Archivo no encontrado: {pinza_file_path}")
 
-    plt.figure()
-    for i in range(n_classes):
-        plt.plot(fpr[i], tpr[i], lw=2, label=f'Class {i} (area = {roc_auc[i]:.2f})')
-    plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
-    plt.xlim([0.0, 1.0])
-    plt.ylim([0.0, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('Receiver Operating Characteristic')
-    plt.legend(loc='lower right')
-    plt.savefig('roc_curve.png')
-    plt.close()
-
-# 3. Curva de Precisión-Recall
-def plot_precision_recall_curve(y_true, y_proba, n_classes):
-    plt.figure()
-    for i in range(n_classes):
-        precision, recall, _ = precision_recall_curve(y_true == i, y_proba[:, i])
-        plt.plot(recall, precision, lw=2, label=f'Class {i}')
-    plt.xlabel('Recall')
-    plt.ylabel('Precision')
-    plt.title('Precision-Recall Curve')
-    plt.legend(loc='lower left')
-    plt.savefig('precision_recall_curve.png')
-    plt.close()
-
-# 4. Gráfico de Precisión versus Épocas
-def plot_accuracy(history):
-    plt.figure()
-    plt.plot(history.history['accuracy'], label='Train Accuracy')
-    plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
-    plt.xlabel('Epochs')
-    plt.ylabel('Accuracy')
-    plt.title('Accuracy vs Epochs')
-    plt.legend()
-    plt.savefig('accuracy_vs_epochs.png')
-    plt.close()
-
-# 5. Gráfico de Pérdida versus Épocas
-def plot_loss(history):
-    plt.figure()
-    plt.plot(history.history['loss'], label='Train Loss')
-    plt.plot(history.history['val_loss'], label='Validation Loss')
-    plt.xlabel('Epochs')
-    plt.ylabel('Loss')
-    plt.title('Loss vs Epochs')
-    plt.legend()
-    plt.savefig('loss_vs_epochs.png')
-    plt.close()
-
-# Clases de ejemplo
-classes = ['Brazo Arriba', 'Descanso', 'Codo', 'Abre y Cierra', 'Pinza']
-
-# Generar las gráficas
-plot_confusion_matrix(y_test, predicted_classes, classes)
-plot_roc_curve(y_test, predictions, len(classes))
-plot_precision_recall_curve(y_test, predictions, len(classes))
-plot_accuracy(history)
-plot_loss(history)
 
