@@ -29,3 +29,4 @@ def tflite_to_header(input_file, output_file):
 
 # Usar la función para convertir el archivo
 tflite_to_header('modelo_entrenado.tflite', 'modelo_entrenado.h')
+print()
