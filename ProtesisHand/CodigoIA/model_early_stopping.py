@@ -134,6 +134,6 @@ if os.path.exists(pinza_file_path):
     unique, counts = np.unique(pinza_predicted_classes, return_counts=True)
     print(f'Resumen de predicciones para Pinza.txt: {dict(zip(unique, counts))}')
 else:
-    print(f"Archivo no encontrado: {pinza_file_path}")
+    print(f"Archivo no encontrado.: {pinza_file_path}")
 
 
