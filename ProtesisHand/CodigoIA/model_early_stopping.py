@@ -109,8 +109,8 @@ print(f'Accuracy: {accuracy}')
 print(f'Classification Report:\n{report}')
 
 # Guardar el modelo entrenado en el formato recomendado por Keras
-model.save('modelo_entrenado.keras')
-print("Modelo guardado como 'modelo_entrenado.keras'")
+model.save('modelo_entrenado_relu.keras')
+print("Modelo guardado como 'modelo_entrenado_relu.keras'")
 
 # 1. Matriz de Confusión
 
