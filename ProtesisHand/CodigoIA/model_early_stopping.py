@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import os
 from tensorflow.keras.callbacks import EarlyStopping
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_curve, auc, precision_recall_curve
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -64,7 +64,9 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train.reshape(-1, 1)).reshape(-1, 1, 1)
 X_test = scaler.transform(X_test.reshape(-1, 1)).reshape(-1, 1, 1)
 
-print("Datos procesados y listos para el entrenamiento del modelo.")
+# Imprimir los parámetros del StandardScaler
+print("StandardScaler mean:", scaler.mean_)
+print("StandardScaler scale:", scaler.scale_)
 
 # Construcción del modelo
 model = Sequential([
@@ -72,8 +74,8 @@ model = Sequential([
     Conv1D(filters=32, kernel_size=1, activation='relu'),  # kernel_size ajustado a 1
     MaxPooling1D(pool_size=1),
     Flatten(),
-    Dense(100, activation='relu'),
-    Dense(5, activation='softmax')  # 5 movimientos diferentes
+    Dense(100, activation='sigmoid'),
+    Dense(4, activation='softmax')  # 4 movimientos diferentes
 ])
 
 # Compilación del modelo con una tasa de aprendizaje ajustada
@@ -110,11 +112,6 @@ print(f'Classification Report:\n{report}')
 model.save('modelo_entrenado.keras')
 print("Modelo guardado como 'modelo_entrenado.keras'")
 
-# Cargar el modelo entrenado
-model = load_model('modelo_entrenado.keras')
-
-
-
 # 1. Matriz de Confusión
 
 def plot_confusion_matrix(y_true, y_pred, classes):
@@ -127,13 +124,8 @@ def plot_confusion_matrix(y_true, y_pred, classes):
     plt.savefig('confusion_matrix.png') 
     plt.close()
 
-
 # Clases de ejemplo
-
 classes = ['Brazo Arriba', 'Descanso', 'Abre y Cierra', 'Pinza']
 
-  
-
 # Generar las gráficas
-
 plot_confusion_matrix(y_test, predicted_classes, classes)
