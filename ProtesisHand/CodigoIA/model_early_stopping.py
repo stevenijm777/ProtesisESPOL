@@ -29,7 +29,7 @@ def load_data(file_path):
     return np.array(data)
 
 # Archivos de datos
-files = ["BrazoArriba.txt", "Descanso.txt", "Codo.txt", "AbreYCierra.txt", "Pinza.txt"]
+files = ["BrazoArriba.txt", "Descanso.txt", "AbreYCierra.txt", "Pinza.txt"]
 
 # Inicializar listas para datos y etiquetas
 all_data = []
@@ -113,27 +113,27 @@ print("Modelo guardado como 'modelo_entrenado.keras'")
 # Cargar el modelo entrenado
 model = load_model('modelo_entrenado.keras')
 
-# Ruta al archivo Pinza.txt
-pinza_file_path = os.path.join(folder_path, 'Pinza.txt')
-
-# Cargar los datos del archivo Pinza.txt
-if os.path.exists(pinza_file_path):
-    pinza_data = load_data(pinza_file_path)
-    # Normalizar y escalar los datos
-    pinza_data = pinza_data / 1023.0
-    pinza_data = pinza_data.reshape(-1, 1, 1)
-    pinza_data = scaler.transform(pinza_data.reshape(-1, 1)).reshape(-1, 1, 1)
-    print("Scaler_mean",scaler.mean_)
-    print("Scaler_scale",scaler.scale_)
-
-    # Realizar predicciones con los datos de Pinza.txt
-    pinza_predictions = model.predict(pinza_data)
-    pinza_predicted_classes = np.argmax(pinza_predictions, axis=1)
-    
-    print(f'Predicciones para Pinza.txt: {pinza_predicted_classes}')
-    unique, counts = np.unique(pinza_predicted_classes, return_counts=True)
-    print(f'Resumen de predicciones para Pinza.txt: {dict(zip(unique, counts))}')
-else:
-    print(f"Archivo no encontrado.: {pinza_file_path}")
 
 
+# 1. Matriz de Confusión
+
+def plot_confusion_matrix(y_true, y_pred, classes):
+    cm = confusion_matrix(y_true, y_pred)   
+    plt.figure(figsize=(10, 7)) 
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=classes, yticklabels=classes)    
+    plt.xlabel('Predicted') 
+    plt.ylabel('True')  
+    plt.title('Confusion Matrix')   
+    plt.savefig('confusion_matrix.png') 
+    plt.close()
+
+
+# Clases de ejemplo
+
+classes = ['Brazo Arriba', 'Descanso', 'Abre y Cierra', 'Pinza']
+
+  
+
+# Generar las gráficas
+
+plot_confusion_matrix(y_test, predicted_classes, classes)
