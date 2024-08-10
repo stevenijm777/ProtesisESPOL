@@ -19,7 +19,7 @@ plt.switch_backend('Agg')
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Ruta a la subcarpeta que contiene los archivos de datos
-subfolder = 'MyHand'  # Cambiar aquí para trabajar con otra subcarpeta
+subfolder = 'MyHand2'  # Cambiar aquí para trabajar con otra subcarpeta
 folder_path = os.path.join(script_dir, 'Datos', subfolder)
 
 # Función para cargar los datos desde un archivo de texto
@@ -29,7 +29,7 @@ def load_data(file_path):
     return np.array(data)
 
 # Archivos de datos
-files = ["AbreYCierra.txt","BalancePie.txt", "BrazoArriba.txt","Codo.txt", "Descanso.txt","Descanso2.txt" , "DescansoDePie.txt", "Pinza.txt", "Pinza2.txt"]
+files = ["AbreYCierra.txt", "BrazoArriba.txt","Codo.txt", "Descanso.txt", "Pinza.txt"]
 
 # Inicializar listas para datos y etiquetas
 all_data = []
@@ -75,7 +75,7 @@ model = Sequential([
     MaxPooling1D(pool_size=1),
     Flatten(),
     Dense(100, activation='sigmoid'),
-    Dense(9, activation='softmax')  # Ajustado a 9 movimientos diferentes
+    Dense(5, activation='softmax')  # Ajustado a 5 movimientos diferentes
 ])
 
 # Compilación del modelo con una tasa de aprendizaje ajustada
@@ -109,8 +109,8 @@ print(f'Accuracy: {accuracy}')
 print(f'Classification Report:\n{report}')
 
 # Guardar el modelo entrenado en el formato recomendado por Keras
-model.save('modelo_entrenado_relu1.keras')
-print("Modelo guardado como 'modelo_entrenado_relu1.keras'")
+model.save('modelo_entrenado_relu2.keras')
+print("Modelo guardado como 'modelo_entrenado_relu2.keras'")
 
 # 1. Matriz de Confusión
 
@@ -121,13 +121,16 @@ def plot_confusion_matrix(y_true, y_pred, classes):
     plt.xlabel('Predicted') 
     plt.ylabel('True')  
     plt.title('Confusion Matrix')   
+    plt.xticks(rotation=45, ha='right')  # Rotar las etiquetas del eje x para que sean más legibles
+    plt.yticks(rotation=45, ha='right')  # Rotar las etiquetas del eje y para que sean más legibles
+    plt.tight_layout()  # Ajustar el layout para que todo se vea bien
     plt.savefig('confusion_matrix.png') 
     plt.close()
 
 # Clases de ejemplo
-classes = ["Abre y Cierra", "Balance Pie", "Brazo Arriba", "Codo", "Descanso", "Descanso2", "Descanso De Pie", "Pinza", "Pinza2"]
+classes = ["Abre y Cierra",  "Brazo Arriba", "Codo", "Descanso", "Pinza"]
 
-# Generar las gráficas
+# Generar la matriz de confusión
 plot_confusion_matrix(y_test, predicted_classes, classes)
 
 def plot_training_history(history):
@@ -170,11 +173,11 @@ def plot_roc_curves(y_test, predictions, n_classes):
         fpr[i], tpr[i], _ = roc_curve(y_test_bin[:, i], predictions[:, i])
         roc_auc[i] = auc(fpr[i], tpr[i])
 
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(10, 5))
     colors = plt.cm.get_cmap('tab10', n_classes)
 
     for i, color in enumerate(colors.colors):
-        plt.plot(fpr[i], tpr[i], color=color, lw=2, label=f'Class {i} (AUC = {roc_auc[i]:0.2f})')
+        plt.plot(fpr[i], tpr[i], color=color, lw=2, label=f'Class {classes[i]} (AUC = {roc_auc[i]:0.2f})')
 
     plt.plot([0, 1], [0, 1], 'k--', lw=2)
     plt.xlim([0.0, 1.0])
@@ -187,20 +190,21 @@ def plot_roc_curves(y_test, predictions, n_classes):
     plt.close()
 
 # Generar las curvas ROC
-plot_roc_curves(y_test, predictions, n_classes=9)
+plot_roc_curves(y_test, predictions, n_classes=5)
 
 
-def plot_error_distribution(y_true, y_pred):
+def plot_error_distribution(y_true, y_pred, classes):
     errors = y_true - y_pred
     plt.figure(figsize=(10, 6))
-    plt.hist(errors, bins=30, alpha=0.7, color='blue', edgecolor='black')
+    plt.hist(errors, bins=np.arange(-0.5, len(classes)-0.5, 1), alpha=0.7, color='blue', edgecolor='black')
     plt.title('Error Distribution')
     plt.xlabel('Error')
     plt.ylabel('Frequency')
+    plt.xticks(ticks=np.arange(len(classes)), labels=classes, rotation=45, ha='right')  # Etiquetas en el eje x
     plt.grid(True)
+    plt.tight_layout()  # Ajustar el layout para que todo se vea bien
     plt.savefig('error_distribution.png')
     plt.close()
 
-# Generar la distribución de errores
-plot_error_distribution(y_test, predicted_classes)
-
+# Generar la distribución de errores con etiquetas de clase
+plot_error_distribution(y_test, predicted_classes, classes)

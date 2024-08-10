@@ -10,11 +10,11 @@ ser = serial.Serial('COM8', 115200)  # Reemplaza 'COM8' con el puerto serie corr
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Ruta a la subcarpeta que contiene los archivos de datos
-subfolder = 'HandLeftP2'
+subfolder = 'MyHand2'
 folder_path = os.path.join(script_dir, 'Datos', subfolder)
 
 # Ruta al archivo BrazoArriba.txt
-file_path = os.path.join(folder_path, 'AbreYCierra.txt')
+file_path = os.path.join(folder_path, 'Pinza.txt')
 
 # Función para cargar los datos desde un archivo de texto
 def load_data(file_path, limit=None):
