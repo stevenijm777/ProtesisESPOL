@@ -13,8 +13,8 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 subfolder = 'HandLeftP2'
 folder_path = os.path.join(script_dir, 'Datos', subfolder)
 
-# Ruta al archivo Pinza.txt
-file_path = os.path.join(folder_path, 'Pinza.txt')
+# Ruta al archivo BrazoArriba.txt
+file_path = os.path.join(folder_path, 'AbreYCierra.txt')
 
 # Función para cargar los datos desde un archivo de texto
 def load_data(file_path, limit=None):
@@ -28,16 +28,26 @@ def load_data(file_path, limit=None):
 if os.path.exists(file_path):
     data = load_data(file_path, limit=100)
     
+    predicciones = []
+    
     for dato in data:
         ser.write(f"{dato}\n".encode())
         print(f"Datos enviados: {dato}")
-        time.sleep(0.1)  # Espera 100 ms antes de enviar el siguiente dato
+        time.sleep(0.5)  # Espera 100 ms antes de enviar el siguiente dato
+        
+        # Leer la predicción de vuelta
+        if ser.in_waiting > 0:
+            prediccion = ser.readline().decode().strip()
+            print(f"Predicción recibida: {prediccion}")
+            predicciones.append(prediccion)
 
-    # Hacer un resumen de las predicciones enviadas
-    resumen = Counter(data)
-    print(f"Resumen de datos enviados para Pinza.txt: {dict(resumen)}")
+    # Contar cuántas veces se predijo cada clase
+    prediccion_counts = Counter(predicciones)
+    print("Resumen de predicciones recibidas:")
+    for clase, count in prediccion_counts.items():
+        print(f"Clase {clase}: {count} veces")
+
 else:
     print(f"Archivo no encontrado: {file_path}")
 
 ser.close()
-

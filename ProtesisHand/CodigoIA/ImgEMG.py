@@ -31,7 +31,7 @@ base_dir = os.path.join(script_dir, 'Datos')
 save_base_dir = os.path.join(script_dir, 'DatosImgEMG')
 
 # Subcarpetas de los datos
-subfolders = ['HandLeftP1', 'HandLeftP2', 'HandRight']
+subfolders = ['MyHand']
 
 # Generar gráficos para cada archivo en cada subcarpeta
 for subfolder in subfolders:
