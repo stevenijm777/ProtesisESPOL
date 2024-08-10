@@ -10,11 +10,11 @@ ser = serial.Serial('COM8', 115200)  # Reemplaza 'COM8' con el puerto serie corr
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Ruta a la subcarpeta que contiene los archivos de datos
-subfolder = 'MyHand2'
+subfolder = 'MyHand'
 folder_path = os.path.join(script_dir, 'Datos', subfolder)
 
 # Ruta al archivo BrazoArriba.txt
-file_path = os.path.join(folder_path, 'Pinza.txt')
+file_path = os.path.join(folder_path, 'Descanso.txt')
 
 # Función para cargar los datos desde un archivo de texto
 def load_data(file_path, limit=None):
@@ -26,14 +26,14 @@ def load_data(file_path, limit=None):
 
 # Leer los primeros 100 datos de un archivo y enviarlos
 if os.path.exists(file_path):
-    data = load_data(file_path, limit=100)
-    
+    #data = load_data(file_path, limit=100)
+    data = load_data(file_path)
     predicciones = []
     
     for dato in data:
         ser.write(f"{dato}\n".encode())
         print(f"Datos enviados: {dato}")
-        time.sleep(0.5)  # Espera 100 ms antes de enviar el siguiente dato
+        time.sleep(0.1)  # Espera 100 ms antes de enviar el siguiente dato
         
         # Leer la predicción de vuelta
         if ser.in_waiting > 0:

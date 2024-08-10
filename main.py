@@ -1,14 +1,14 @@
 import tensorflow as tf
 
 # Carga el modelo Keras
-model = tf.keras.models.load_model('modelo_entrenado_relu1.keras')
+model = tf.keras.models.load_model('modelo_entrenado_por_ventanas.keras')
 
 # Convertir el modelo a formato TensorFlow Lite
 converter = tf.lite.TFLiteConverter.from_keras_model(model)
 tflite_model = converter.convert()
 
 # Guardar el modelo TFLite
-with open('modelo_entrenado_relu2.tflite', 'wb') as f:
+with open('modelo_entrenado_por_ventanas.tflite', 'wb') as f:
     f.write(tflite_model)
     
 def tflite_to_header(input_file, output_file):
@@ -28,5 +28,5 @@ def tflite_to_header(input_file, output_file):
         f.write('#endif // MODELO_ENTRENADO_H\n')
 
 # Usar la función para convertir el archivo
-tflite_to_header('modelo_entrenado_relu2.tflite', 'modelo_entrenado_relu2.h')
+tflite_to_header('modelo_entrenado_por_ventanas.tflite', 'modelo_entrenado_por_ventanas.h')
 print()

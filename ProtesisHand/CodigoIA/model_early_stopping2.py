@@ -125,7 +125,7 @@ def plot_confusion_matrix(y_true, y_pred, classes):
     plt.close()
 
 # Clases de ejemplo
-classes = ["Abre y Cierra", "Balance Pie", "Brazo Arriba", "Codo", "Descanso", "Descanso2", "Descanso De Pie", "Pinza", "Pinza2"]
+classes = ["AbreYCierra","BalancePie", "BrazoArriba","Codo", "Descanso","Descanso2" , "DescansoDePie", "Pinza", "Pinza2"]
 
 # Generar las gráficas
 plot_confusion_matrix(y_test, predicted_classes, classes)
