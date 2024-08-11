@@ -8,7 +8,7 @@ converter = tf.lite.TFLiteConverter.from_keras_model(model)
 tflite_model = converter.convert()
 
 # Guardar el modelo TFLite
-with open('modelo_entrenado_por_ventanas.tflite', 'wb') as f:
+with open('modelo_entrenado_por_ventanas2.tflite', 'wb') as f:
     f.write(tflite_model)
     
 def tflite_to_header(input_file, output_file):
@@ -28,5 +28,5 @@ def tflite_to_header(input_file, output_file):
         f.write('#endif // MODELO_ENTRENADO_H\n')
 
 # Usar la función para convertir el archivo
-tflite_to_header('modelo_entrenado_por_ventanas.tflite', 'modelo_entrenado_por_ventanas.h')
+tflite_to_header('modelo_entrenado_por_ventanas2.tflite', 'modelo_entrenado_por_ventanas2.h')
 print()

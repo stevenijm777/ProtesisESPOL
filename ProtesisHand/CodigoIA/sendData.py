@@ -14,7 +14,7 @@ subfolder = 'MyHand'
 folder_path = os.path.join(script_dir, 'Datos', subfolder)
 
 # Ruta al archivo BrazoArriba.txt
-file_path = os.path.join(folder_path, 'Descanso.txt')
+file_path = os.path.join(folder_path, 'Pinza2.txt')
 
 # Función para cargar los datos desde un archivo de texto
 def load_data(file_path, limit=None):

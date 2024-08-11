@@ -19,8 +19,8 @@ subfolder = 'MyHand'  # Subcarpeta con los datos
 folder_path = os.path.join(script_dir, 'Datos', subfolder)
 
 # Parámetros de ventana
-window_size = 200  # Tamaño de la ventana
-step_size = 50     # Paso entre ventanas consecutivas (solapamiento)
+window_size = 50  # Tamaño de la ventana
+step_size = 5     # Paso entre ventanas consecutivas (solapamiento)
 
 # Función para cargar datos y segmentar en ventanas
 def load_data_and_segment(file_path):
@@ -82,7 +82,7 @@ model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001), loss='spa
 
 # Entrenamiento con Early Stopping
 early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
-history = model.fit(X_train, y_train, epochs=50, batch_size=32, validation_split=0.2, callbacks=[early_stopping])
+history = model.fit(X_train, y_train, epochs=100, batch_size=32, validation_split=0.2, callbacks=[early_stopping])
 
 # Evaluación
 loss, accuracy = model.evaluate(X_test, y_test)
@@ -91,8 +91,8 @@ print(f'Loss: {loss}, Accuracy: {accuracy}')
 # Funciones adicionales para análisis (matriz de confusión, historia de entrenamiento, etc.)
 # (insertar funciones de plot aquí como antes)
 
-model.save('modelo_entrenado_por_ventanas.keras')
-print("Modelo guardado como 'modelo_entrenado_por_ventanas.keras'")
+model.save('modelo_entrenado_por_ventanas2.keras')
+print("Modelo guardado como 'modelo_entrenado_por_ventanas2.keras'")
 
 import seaborn as sns
 import matplotlib.pyplot as plt
